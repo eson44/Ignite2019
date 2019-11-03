@@ -35,3 +35,38 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+# Web Deploy packages 
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.ArtifactStagingDirectory)'
+    Contents: '*.zip'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/drop'
+
+# Dacpac
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: ''
+    Contents: '*.dacpac'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/drop'
+
+# deploy folder
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: 'deploy'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/drop'
+
+
+# Binary files
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)/src/PokerLeagueManager.Utilties/bin/Debug'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/drop/Utility'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/drop'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
